@@ -25,7 +25,6 @@ INSTALLED_APPS = [
     'product',
 ]
 
-ASGI_APPLICATION = 'myproject.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',

@@ -35,7 +35,6 @@ class APILoggerMiddleware:
                 duration_ms   = duration,
             )
 
-            # Live broadcast admin ko
             try:
                 async_to_sync(self.channel_layer.group_send)('api_logs', {
                     'type':        'new_log',
