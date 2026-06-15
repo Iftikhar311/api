@@ -7,7 +7,7 @@ CacheControl==0.14.4
 cbor2==6.1.2
 certifi==2026.5.20
 cffi==2.0.0
-channels==4.1.0
+channels==4.0.0
 channels-redis==4.2.0
 charset-normalizer==3.4.7
 constantly==23.10.4
