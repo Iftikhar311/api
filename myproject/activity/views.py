@@ -1074,31 +1074,40 @@ def upload_media(request):
     if not user_id:
         return Response({'success': False, 'message': 'user_id required'}, status=400)
 
+    # ✅ File physically save karo
+    file     = request.FILES.get('file')
+    file_url = ''
+
+    if file:
+        from django.core.files.storage import default_storage
+        from django.core.files.base import ContentFile
+        file_name  = f"uploads/{user_id}_{file.name}"
+        saved_path = default_storage.save(file_name, ContentFile(file.read()))
+        file_url   = request.build_absolute_uri(f'/media/{saved_path}')
+
     data = {
-        'user_id':    user_id,
-        'file_name':  request.data.get('file_name', ''),
-        'file_size':  request.data.get('file_size', 0),
-        'file_type':  request.data.get('file_type', ''),
+        'user_id'   : user_id,
+        'file_name' : request.data.get('file_name', ''),
+        'file_size' : request.data.get('file_size', 0),
+        'file_type' : request.data.get('file_type', ''),
         'media_type': request.data.get('media_type', 'video'),
-        'caption':    request.data.get('caption', ''),
-        'duration':   request.data.get('duration', ''),
+        'caption'   : request.data.get('caption', ''),
+        'duration'  : request.data.get('duration', ''),
         'resolution': request.data.get('resolution', ''),
-        'file_url':   request.data.get('file_url', ''),
+        'file_url'  : file_url,
     }
 
     serializer = ReelUploadSerializer(data=data)
     if serializer.is_valid():
         upload = serializer.save()
         return Response({
-            'success':   True,
-            'message':   'Upload database mein save ho gaya!',
+            'success'  : True,
+            'message'  : 'Upload ho gaya!',
             'upload_id': upload.id,
-            'data':      serializer.data,
+            'data'     : serializer.data,
         }, status=201)
 
     return Response({'success': False, 'errors': serializer.errors}, status=400)
-
-
 @api_view(['GET'])
 def get_uploads(request, user_id):
     uploads = ReelUpload.objects.filter(user_id=user_id)
